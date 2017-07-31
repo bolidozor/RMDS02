@@ -1,16 +1,16 @@
 ﻿[InfoShortDescription.en]
-Radio Meteor Detection Station with GPS
+Radio Meteor Detection Station
 
 [InfoShortDescription.cs]
-Stanice pro radiovou detekci meteorů s GPS
+Stanice pro radiovou detekci meteorů
 
 [InfoLongDescription.en]
 
-MLAB set of modules which are used for radio detection of meteor trails. It is upgraded by GPS time synchronization to determining itner-station reflection variation. 
+MLAB set of modules which are used for radio detection of meteor trails. Upgraded version with globaly synchronized local oscillator and improved digitalizing system. This version using an FPGA module to compensate local oscillator drifts.
 
 [InfoLongDescription.cs]
 
-Set pro radiovou detekci meteorů. Je rozšířen o časovou synchronizaci přes GPS k určení variací odrazu přijatého několika stanicemi.
+Set pro radiovou detekci meteorů. Vylepšený o globální sycnchronizaci lokálního oscilátoru a vylepšení metody digitalizace signálu. Tato verze využívá FPGA pro kompenzaci rozladění lokálního oscilátoru.  
 
 
 [End]
