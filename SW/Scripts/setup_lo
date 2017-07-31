@@ -1,0 +1,67 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          setup_lo
+# Required-Start:    $network $remote_fs $syslog
+# Required-Stop:     $network $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Tune local oscilator 
+# Description:       This start-up script tune local oscilator to defined frequency.
+### END INIT INFO
+
+# Author: Jakub Kakona <kaklik@mlab.cz>
+#
+# Please remove the "Author" lines above and replace them
+# with your own name if you copy and modify this script.
+
+
+PATH=/sbin:/usr/local/bin:/bin:/usr/bin
+DESC="Usb softrock local oscillator tunning script"
+NAME=usbsoftrock
+DAEMON=/usr/sbin/$NAME
+DAEMON_ARGS=""
+PIDFILE=/var/run/$NAME.pid
+SCRIPTNAME=/etc/init.d/$NAME
+
+# Exit if the package is not installed
+if [ -x "$DAEMON" ] 
+  then echo "usbsoftrock not installed. Nothing to done"
+  exit 0
+fi
+
+# Read configuration variable file if it is present
+[ -r /etc/default/$NAME ] && . /etc/default/$NAME
+
+# Load the VERBOSE setting and other rcS variables
+. /lib/init/vars.sh
+
+# Define LSB log_* functions.
+# Depend on lsb-base (>= 3.2-14) to ensure that this file is present
+# and status_of_proc is working.
+. /lib/lsb/init-functions
+
+
+freq=142.997918
+
+case "$1" in
+  start)
+	usbsoftrock -m 2 set freq $freq
+	;;
+  restart|reload|force-reload)
+	echo "Re-tunning the local oscilator" >&2
+	usbsoftrock -v -m 2 set freq 20.000
+	wait 1
+	usbsoftrock -v -m 2 set freq $freq
+	exit 3
+	;;
+  stop)
+	echo "Local oscillator is tuned to `usbsoftrock getfreq | grep Frequency` "
+	;;
+  *)
+	echo "Error: argument '$1' not supported" >&2
+	echo "Usage: $0 start|stop" >&2
+	exit 3
+	;;
+esac
+
+

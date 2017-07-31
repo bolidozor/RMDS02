@@ -1,0 +1,175 @@
+﻿;Josef Szylar ver 1.6 - 4. 8. 2013
+;PODMÍNKA JEN 80 ZNAKŮ
+;PŘÍKAZY JEN 255 ZNAKŮ
+
+;Zmeny:
+;- Opravena chyba s prepisovanim vypisu zacatku 
+;- cas necitlivosti upraven na 2
+;- cas ovaleni upraven na 4
+;- Doplneno generovani pruklepu screenshotu pri bolidu do adresare s bolidy
+;- Graficka zmena vypisu
+;- Pridan zaznam o intenzite sumu do no_met
+
+
+;Časovače
+;timer0 - časovač maximální mezery mezi 2 meteory K_max_time_btw_met
+;timer3 - časovač pro odpočet screenshotu bez meteoru K_max_time_to_scr
+;timer4 - časovač pro odečet screenshotu s meteorem po odvalení několika málo sekund aby nebyl meteor moc nahoře
+
+;Proměnné: 
+;n=0   noise background šum pozadí
+;n_1=0   šum v okamžiku detekce meteoru
+;f=0   frequency of maximum amplitude frekvence na které se nachází maximum
+;aver_amp=0  average amplitude +- 100 Hz  průměrná aplituda v rozsahu +- 100Hz od maxima
+;aver_amp_1=-999 je average amplitude aktualizovaná v průběhu měření meteoru
+;aver_amp_max=-999 je maximální hodnota z hodnot v průběhu měření meteoru
+;mag=0   magnitude
+;hour_count=0   count of meteors in hour
+;dur_count=0   maximální délka meteoru (count po dobu existence meteoru)
+;dur_count_1=0  pomocný k uchování hodnoty dur_count
+;t0=0 průběžný čas a datum (aktualizace každých 50ms) v textové formě "YYYYMMDDhh"
+;t0_1 uložený čas pro jméno datového souboru k odeslaní ftp po uplynulé hodině
+;t1=0  čas start aktuální meteor v UNIX timestamp formě
+;t1_1=0 uložený čas pro zápis do RMOB_dur souboru value:event
+;t1_2=0 uložený čas pro odesílání "no meteor" screenshotu
+;t2=0  průběžný čas hour (hodnota průběžné hodiny) v textové formě "hh"
+;t3=0  průběžný čas hodiny minuty a vteřiny v textové formě "mmss"
+;t4=0  čas meteoru s nejdelší dobou aktivity (násobek K_int_cond * dur_count)
+;id_met=0 identifikátor meteoru do screenshotu
+
+;Konstanty:
+;K_station_name="JOSY_A"  station name (devices code - 7 characters maximum, only "A-Z" and "_" - get your unique station code on http://home.robozor.cz)
+
+;K_path_scr vložit lokální adresář pro screenshoty
+;K_path_audio  vložit lokální adresář pro audio soubory
+;K_path_RMOB vložit lokální adresář textové soubory RMOB
+;K_path_SDR vložit lokální adresář textové soubory RMOB
+;K_max_time_btw_met=2 minimalni doba mezi 2 meteory v sekundachjsou (nižší se počítá jako 1 meteor)
+;K_max_time_to_scr=100 maximální doba bez meteoru, která pokud vyprší, udělá screenshot (max doba za kterou odroluje waterfall)
+;K_init_cond=50 interval pro nastavení vyhodnocení scriptu 50ms Evaluate SpectrumLab condition interval (50ms)
+;K_time_to_start_up_waterf=4 vteřiny od okraje screenshot Kolik sekund se má počkat do screenshotu po detekci metreoru (jak daleko od okraje)
+;K=7 - citlivost detekce meteoru
+;K_min_dur_count_bolid=50 detekce bolidu pro audio (2,5 vteřiny) 
+
+;Události
+;A_init (inicializace)
+;A_measurement (kdykoliv po 50 ms)
+;A_still_detect (událost trvání meteoru nebo bolidu) - průběžně
+;A_start_detect (událost detekce začátku meteoru nebo bolidu)
+;A_start_detect_bolid (událost 2,5 vteřiny od detekce meteoru)
+;A_end_detect (událost detekce konce meteoru nebo bolidu)
+;A_end_detect_end (konec cyklu události detekce konce meteoru nebo bolidu)
+;A_write_waterf (událost záznamu popisu detekce do waterfallu)
+;A_update_SDR_data_file (událost generování souboru SDR screenshot při záznamu meteoru)
+;A_update_RMOB_Dur_file (událost generování souborů RBOB)
+;A_met_screenshot (událost generování screenshotu waterfallu pokud je zaznamenán meteor)
+;A_no_met_screenshot (událost generování screenshotu waterfallu pokud není dlouho zaznamenán meteor)
+;A_once_hour_20s_before (událost 1x za hodinu před ukončením hodiny 20 vteřin)
+;A_once_hour
+;A_once_hour_10s_before (událost 1x za hodinu před ukončením hodiny 10 vteřin)
+;A_once_hour_30s_after (událost 1x za hodinu po ukončení hodiny 30 vteřin)
+
+
+;-----------------A_init - Inicializace proměnných a konstant--------------------
+if( initialising ) then A_init=1:A_still_detect=0:n=0:n_1=0:f=0:f_1=0:aver_amp=0:a=0:mag=0:mag_max=0:hour_count=0:dur_count=0:dur_count_1=0:aver_amp_1=-999:aver_amp_max=-999:t0=0:t0_1=0:t1=0:t1_1=0:t1_2=0:t2=0:t3=0:t4=0:bolide=0
+if( A_init = 1 ) then A_init=2:id_met="no":id_met2="no":K_station_name="SVAK1_":K_path_scr="c:\\meteors\\capture\\":K_path_audio="c:\\meteors\\audio\\":K_path_RMOB="C:\\meteors\\RMOB\\":K_path_SDR="C:\\meteors\\data\\"
+if( A_init = 2 ) then A_init=3:K_path_extra="c:\\meteors\\extra\\":K_max_time_btw_met=2:K_max_time_to_scr=100:K_init_cond=50:K_time_to_start_up_waterf=4:K=7:K_min_dur_count_bolid=50
+if( A_init = 3 ) then A_init=4:A_measurement=0:A_start_detect=0:A_end_detect=0:A_end_detect_end=0:A_write_waterf=0:A_update_SDR_data_file=0:A_update_RMOB_Dur_file=0:A_met_screenshot=0
+if( A_init = 4 ) then A_init=5:A_no_met_screenshot=0:A_once_hour_20s_before=0:A_once_hour=0:A_once_hour_10s_before=0:A_once_hour_30s_after=0:A_once_hour_40s_after=0:timer3.restart(K_max_time_to_scr)
+if( A_init = 5 ) then A_init=0
+
+;----------------A_measurement - (po 50 ms)-------------------------------------
+;n=noise(9800,10200) aktualizace a výpočet hodnoty šumu (záleží na nastavení FFT)
+;f=peak_f(10300,10900) max intenzita signálu v daném intervalu frekvencí
+;aver_amp=avrg(f-100,f+100) vrací prům. intenzitu signálu 100 Hz kolem maxima 
+;t0=str("YYYYMMDDhh",now) uloží aktuální datum
+;t1=now uloží UNIX time stamp na microsekundy (tečka oddělovač)
+;t2=str("hh",now) uloží aktuální hodinu
+;t3=str("mmss",now) uloží aktuální minutu a vteřinu
+;-------------------------------------------------------------------------------
+if( never ) then REM --- A_measurement - (each 50 ms) ----------------------------
+if( always ) then A_measurement=1:n=noise(9800,10200):f=peak_f(10300,10900):aver_amp=avrg(f-100,f+100):a=(n+K)
+if( A_measurement=1 ) then A_measurement=0:t0=str("YYYYMMDDhh",now):t1=round(now*1000):t2=str("hh",now):t3=str("mmss",now)
+
+;-----------------A_still_detect (an event of meteor or bolide continue)-----------
+if( aver_amp>a ) then A_still_detect=A_still_detect+1:timer0.restart(K_max_time_btw_met):timer3.restart(K_max_time_to_scr):dur_count=dur_count+1:aver_amp_1=aver_amp
+
+;-----------------A_aver_amp (udalost aktualizace maximalni hodnoty aver_amp)---
+if( aver_amp_1>aver_amp_max ) then aver_amp_max=aver_amp_1
+
+;-----------------A_start_detect (událost začátku meteoru)----------------------
+if( never ) then REM --- A_start_detect (an event of begin of meteor) --------------
+if( A_still_detect=1 ) then  A_still_detect=2:A_start_detect=1:t1_1=t1:id_met=(K_station_name+str(t1_1)):sp.print("`                  ^ t+"+str("ss",time))
+if( A_start_detect=1 ) then A_start_detect=2:n_1=n:f_1=f
+if( A_start_detect=2 ) then A_start_detect=0:
+
+;------------A_end_detect (událost detekce konce meteoru nebo bolidu)-----------                                           
+if( never ) then REM --- A_end_detect (end of meteor) ---
+if( timer0.expired(1) ) then A_end_detect=1:id_met2=id_met:hour_count=hour_count+1:timer4.restart(K_time_to_start_up_waterf):dur_count1=dur_count*K_init_cond:
+if( A_end_detect=1 ) then A_end_detect=2:sp.print("`                    "+id_met2+" HCount"+str(hour_count)+" nb"+str(round(n_1))+" f"+str(f_1)+"  dur"+str(dur_count1)+"  mag"+str(round(n_1-aver_amp_max+10)))
+if( A_end_detect=2 ) then A_end_detect=3:A_update_SDR_data_file=1
+if( A_end_detect=3 ) then A_end_detect=0
+ 
+;-----------------A_update_SDR_data_file----------------------------------------
+;SDR datový soubor záznamu radiometeorů (projekt astrozor.cz) 
+;Název souboru:JOSY_A20130123.dat
+if( never ) then REM --- write data to file (project astrozor.cz) ---
+if( A_update_SDR_data_file=1 ) then A_update_SDR_data_file=2:fopen1(K_path_SDR+K_station_name+t0+".dat",a)
+if( A_update_SDR_data_file=2 ) then A_update_SDR_data_file=3:fp1(id_met2+" ; "+str(round(n_1))+" ; "+str(f_1)+" ; "+str(aver_amp_max)+" ; "+str(round(n_1-aver_amp_max+10))+" ; "+str(dur_count1)+" ; "+str(K_init_cond)+" ; "+str(K_min_dur_count_bolid))
+if( A_update_SDR_data_file=3 ) then A_update_SDR_data_file=4:fclose1
+if( A_update_SDR_data_file=4 ) then A_update_SDR_data_file=5:A_end_detect_end=1
+if( A_update_SDR_data_file=5 ) then A_update_SDR_data_file=0
+    
+;--------------A_end_detect_end-------------------------------------------------
+;zametení
+if( never ) then REM --- Cleaning ----------------------------------------------
+if( A_end_detect_end=1 ) then A_end_detect_end=2:dur_count=0:dur_count_1=0:aver_amp_1=-999:aver_amp_max=-999:rec.trigger=0:A_still_detect=0
+if( A_end_detect_end=2 ) then A_end_detect_end=3:REM exec(K_path_audio+"ftp_up.bat "+id_met2+".wav")
+if( A_end_detect_end=3 ) then A_end_detect_end=0
+
+;-----------------A_start_detect_bolid (událost start bolidu)-------------------
+if( never ) then REM --- A_start_detect_bolid (begin of fireball) --------------
+if( dur_count=K_min_dur_count_bolid ) then rec.filename=K_path_audio+id_met+".wav":rec.trigger=1:bolide=1
+
+;---A_met_screenshot (událost generování screenshotu waterfallu pokud je zaznamenán meteor)---
+if( never ) then REM --- A_met_screenshot (capture a screenshot with meteor) ---
+if( timer4.expired(1) ) then A_met_screenshot=1:capture (K_path_scr+id_met2+".jpg")
+if((A_met_screenshot=1)&&(bolide=1)) then capture (K_path_extra+id_met2+".jpg")
+if( A_met_screenshot=1 ) then A_met_screenshot=2:REM exec(K_path_scr+"ftp_up.bat "+id_met2+".jpg")
+if( A_met_screenshot=2 ) then A_met_screenshot=0:bolide=0
+
+;---A_no_met_screenshot (událost generování screenshotu waterfallu pokud není dlouho zaznamenán meteor)---
+if( never ) then REM --- A_no_met_screenshot (capture a screenshot without meteor) ---
+if( timer3.expired ) then A_no_met_screenshot=1:t1_2=t1:capture (K_path_scr+K_station_name+str(t1_2)+"no_met.jpg")
+if( A_no_met_screenshot=1 ) then A_no_met_screenshot=2:fopen1(K_path_SDR+K_station_name+t0+".dat",a)
+if( A_no_met_screenshot=2 ) then A_no_met_screenshot=3:fp1(K_station_name+str(t1_2)+"no_met ; "+str(round(n))+" ;  ;  ;  ;  ;  ; ")
+if( A_no_met_screenshot=3 ) then A_no_met_screenshot=4:fclose1
+if( A_no_met_screenshot=4 ) then A_no_met_screenshot=5:t1_2=0
+if( A_no_met_screenshot=5 ) then A_no_met_screenshot=0:timer3.restart(K_max_time_to_scr)
+    
+;-A_once_hour_20s_before (událost 1x za hodinu před ukončením hodiny 20 vteřin)-
+;RMOB - soubor pro měření hodinových četností radiometeorů (projekt www.rmob.org)
+;Název souboru:RMOB-201301.dat, kde RMOB je zkratka pro Radio Meteor Observing Bulletin, 2013 je rok a 01 je měsíc 
+if( never ) then REM --- A_once_hour_20s_before (an event 1x per hour - 20 seconds) ---
+if( val(t3,"####")=5940 ) then A_once_hour_20s_before=A_once_hour_20s_before+1
+if( A_once_hour_20s_before=1 ) then A_once_hour=1:fopen4(K_path_RMOB+"RMOB-"+str("YYYYMM",now)+".dat",a):fp4(t0,",",t2,",",hour_count):fclose4:t0_1=t0
+if( A_once_hour=1 ) then A_once_hour=2:sp.print("Last hour=",hour_count):hour_count=0
+if( A_once_hour=2 ) then A_once_hour=0
+
+;-A_once_hour_10s_before (událost 1x za hodinu před ukončením hodiny 10 vteřin)-
+if( never ) then REM --- A_once_hour_10s_before (an event 1x per hour - 10 seconds) ---
+if( val(t3,"####")=5950 ) then A_once_hour_10s_before=1:A_once_hour_20s_before=0:
+if( A_once_hour_10s_before=1 ) then A_once_hour_10s_before=0
+
+;-A_once_hour_30s_after (událost 1x za hodinu po ukončení hodiny 30 vteřin)-
+if( never ) then REM --- A_once_hour_30s_after (an event 1x per hour + 30 seconds) ---
+if( val(t3,"####")=0030 ) then A_once_hour_30s_after=A_once_hour_30s_after+1
+if( A_once_hour_30s_after=1 ) then A_once_hour=1:REM exec(K_path_SDR+"ftp_up.bat "+K_station_name+t0_1+".dat")
+if( A_once_hour=1 ) then A_once_hour=0
+
+;-A_once_hour_40s_after (událost 1x za hodinu po ukončení hodiny 40 vteřin)-
+if( never ) then REM --- A_once_hour_40s_after (an event 1x per hour + 40 seconds) ---
+if( val(t3,"####")=0040 ) then A_once_hour_40s_after=1:A_once_hour_30s_after=0
+if( A_once_hour_40s_after=1 ) then A_once_hour_40s_after=2:t0_1=0
+if( A_once_hour_40s_after=2 ) then A_once_hour_40s_after=0
+    

@@ -1,0 +1,18 @@
+﻿[InfoShortDescription.en]
+Radio Meteor Detection Station
+
+[InfoShortDescription.cs]
+Stanice pro radiovou detekci meteorů
+
+[InfoLongDescription.en]
+
+MLAB set of modules which are used for radio detection of meteor trails. It can be used to study of Doppler effects on reflection from ionized meteor trails.
+
+[InfoLongDescription.cs]
+
+Set pro radiovou detekci meteorů. Může být použit pro základní měření četností a dopplerovských posunů radiových odrazů meteorů.
+
+[InfoBuyUST]
+http://www.ust.cz/shop/product_info.php?cPath=38&products_id=223
+
+[End]
