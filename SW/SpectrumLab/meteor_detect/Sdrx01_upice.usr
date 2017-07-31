@@ -1,7 +1,7 @@
 
 [ABOUT]
 Info1=Configuration file for Spectrum Lab
-Info2=Compilation date Mar 11 2012
+Info2=Compilation date Feb  5 2013
 MenuText=DC Receiver 48k
 InfoText=
 
@@ -13,12 +13,14 @@ DebugFlags=0
 PrefRxAudioCenterFreq=-1
 PrefTxAudioCenterFreq=-1
 FrequencyListFile=frequencies\default.txt
+PlainFreqInputFields=0
+FreqInputFieldsMinMax=0
 
 [MAIN_WINDOW]
-Left=62
-Top=29
-Width=967
-Height=771
+Left=67
+Top=22
+Width=1851
+Height=1056
 Visible=-1
 FormStyle=-1
 ShowWindowsInTaskBar=0
@@ -26,7 +28,7 @@ MinimizeToSystemTray=0
 BottomCtrls=0
 LeftCtrls=1
 LeftCtrlWidth=128
-LeftCtrlVSplit=182
+LeftCtrlVSplit=190
 ContrastSliderUsage=0
 
 [CircuitForm]
@@ -109,8 +111,8 @@ TxHeight=-1
 AutoLineBreak=0
 
 [CONFIG_WINDOW]
-Left=199
-Top=149
+Left=68
+Top=23
 Width=-1
 Height=-1
 Visible=-1
@@ -134,8 +136,8 @@ FormStyle=-1
 ActivePage=0
 
 [PeriodicActionForm]
-Left=386
-Top=308
+Left=706
+Top=336
 Width=508
 Height=408
 Visible=0
@@ -192,8 +194,8 @@ Trigger=1
 
 [LAST_SESSION]
 PlaylistName=
-AnalysedFileName=test1.wav
-AnalysedFileType=0
+AnalysedFileName=Z:\home\kaklik\bolid_svakov_30323_044316.wav
+AnalysedFileType=2
 LoggingWave=logfile1.wav
 
 [SOUNDCARD]
@@ -263,8 +265,6 @@ Visible=0
 FormStyle=0
 
 [SDR_IQ]
-Enabled=0
-RadioType=0
 FilterNr=3
 RFgain_dB=0
 IFgain_dB=24
@@ -318,6 +318,7 @@ WaveAnalysisRawDataType=2
 WaveAnalysisRawTypeFlags=0
 WaveAnalysisRawNChannels=0
 WaveAnalysisRawFileSampleRate=48000
+WaveAnalysisFullScaleSampleValue=1
 
 [WAVE_SAVE]
 Downsampled=0
@@ -332,7 +333,7 @@ WriteAuxFile=1
 MaxFileSize=1400
 Flags=5
 FileIndex=0
-TrigRecorderFile=/home/kaklik/capture_audio/bolid_upice_21020_222547.wav
+TrigRecorderFile=/media/nfs/audio/bolid_upice_30817_113011.wav
 TrigRecorderFileMode=0
 PreTrigSeconds=6
 PostTrigSeconds=11
@@ -348,14 +349,14 @@ FoutMin=0
 [SOUND_THREAD]
 StartSoundThread=1
 StartSoundInput=1
-StartSoundOutput=1
+StartSoundOutput=0
 StartSignalGenerator=0
 SignalGeneratorUnits=0
 StartDigitalFilter=1
 DigitalFilterBypass=0
 FreeRunningSpeedPcnt=100
 StereoProcessing=1
-MinimizeLatency=0
+MinimizeLatency=1
 ChainBothChannels=0
 IQInputSwapChannels=0
 IQInputAdjustEnable=0
@@ -741,7 +742,6 @@ FreqMax=11022.2613061
 FreqMin2=600
 FreqMax2=800
 FreqOffset=0
-FreqOffset2=0
 EditFWithoutOffset=0
 AmplMin=-130
 AmplMax=0
@@ -827,8 +827,8 @@ ChnIndividualContrast=0
 WaterColorPalette=palettes\sunrise.pal
 VisualAGCMode=0
 VisualAGCRef=-100
-ColorPalContrast=103
-ColorPalBrightness=132
+ColorPalContrast=123
+ColorPalBrightness=155
 ColorPalSaturation=128
 WaterColorPalette2=palettes\sunrise.pal
 VisualAGCMode2=0
@@ -857,7 +857,6 @@ FreqMax=5000
 FreqMin2=600
 FreqMax2=800
 FreqOffset=0
-FreqOffset2=0
 EditFWithoutOffset=0
 AmplMin=-120
 AmplMax=0
@@ -1220,7 +1219,7 @@ THEN4=H=0:C=0:E=E+1:sp.print("                        "+str(E)+"  nb"+str(round(
 IF5=val(h1,"####")>5955
 THEN5=t2=t2+1
 IF6=t2=2
-THEN6=fopen3("/home/kaklik/RMOB_Dur-"+str("YYYYMM",now)+".dat",a):fp3(q2,", count=",E,", strenght=",D,", maxdur=",Z,", noise=",A,", event=",str("mm",N)):REM zaznam nejdelsiho meteoru v hodine
+THEN6=fopen3("/home/meteor/RMOB_Dur-"+str("YYYYMM",now)+".dat",a):fp3(q2,", count=",E,", strenght=",D,", maxdur=",Z,", noise=",A,", event=",str("mm",N)):REM zaznam nejdelsiho meteoru v hodine
 IF7=val(h1,"####")<30
 THEN7=t2=0
 IF8=P>M
@@ -1228,9 +1227,9 @@ THEN8=M=P
 IF9=H=1
 THEN9=H=2:X=A:Y=Q:sp.print("                                                                              t+"+str("ss",time)):REM poznamenej zacatek meteoru
 IF10=C=50
-THEN10=rec.filename="/media/nfs/audio/bolid_upice_"+str("YMMDD_hhmmss",now)+".wav":rec.trigger=1:REM audiozaznam, pokud je echo dele jak 2,5s
+THEN10=rec.filename="/home/meteor/bolidy/bolid_upice_"+str("YYMMDD_hhmmss",now)+".wav":rec.trigger=1:REM audiozaznam, pokud je echo dele jak 2,5s
 IF11=t2=3
-THEN11=fopen4("/home/kaklik/RMOB-"+str("YYYYMM",now)+".dat",a):fp4(q2,",",L,",",E):fclose4:sp.print("Last hour=",E):C=0:E=0:Z=0:REM dalsi hodina
+THEN11=fopen4("/home/meteor/RMOB-"+str("YYYYMM",now)+".dat",a):fp4(q2,",",L,",",E):fclose4:sp.print("Last hour=",E):C=0:E=0:Z=0:REM dalsi hodina
 IF12=
 THEN12=
 IF13=
@@ -1465,7 +1464,6 @@ IIR2DesignFile=
 FIR2DesignFile=
 FilterFftSize=16384
 FftSame4All=1
-FftShowInGraph=1
 FftANotchSpeed=0.05
 FftANotchWidth=5
 FftANRegionWidth=20
@@ -1570,7 +1568,6 @@ IIR2DesignFile=
 FIR2DesignFile=
 FilterFftSize=16384
 FftSame4All=1
-FftShowInGraph=1
 FftANotchSpeed=0.05
 FftANotchWidth=5
 FftANRegionWidth=20
@@ -1993,6 +1990,38 @@ Exprs7=$"Button #8"
 Commands7=
 Options7=2
 Hotkey7=0
+Exprs8=$"Button #9"
+Commands8=
+Options8=2
+Hotkey8=0
+Exprs9=$"Button #10"
+Commands9=
+Options9=2
+Hotkey9=0
+Exprs10=$"Button #11"
+Commands10=
+Options10=2
+Hotkey10=0
+Exprs11=$"Button #12"
+Commands11=
+Options11=2
+Hotkey11=0
+Exprs12=$"Button #13"
+Commands12=
+Options12=2
+Hotkey12=0
+Exprs13=$"Button #14"
+Commands13=
+Options13=2
+Hotkey13=0
+Exprs14=$"Button #15"
+Commands14=
+Options14=2
+Hotkey14=0
+Exprs15=$"Button #16"
+Commands15=
+Options15=2
+Hotkey15=0
 
 [USER_MENU_ITEMS]
 Exprs0=
@@ -2023,7 +2052,7 @@ Hotkey5=0
 [WatchWindow]
 Left=124
 Top=108
-Width=503
+Width=510
 Height=392
 Visible=0
 FormStyle=0
@@ -2031,6 +2060,7 @@ FormStyle=0
 [WatchListAndPlotter]
 Flags=0
 TextExportFlags=0
+BottomControls=0
 
 [WatchList]
 Title1=Noise

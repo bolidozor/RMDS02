@@ -1,0 +1,1 @@
+Program pro PIC18F4550 pro nacitani PPS impulsu z GPS.

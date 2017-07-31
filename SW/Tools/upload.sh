@@ -21,3 +21,5 @@ if [[ -f exclude-list.txt ]]
     else
     rsync -avtz "$UPDIR"/ meteor@neptun.avc-cvut.cz:data/"$UPDIR"
 fi
+
+xxx
