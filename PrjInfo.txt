@@ -6,11 +6,11 @@ Stanice pro radiovou detekci meteorů s GPS
 
 [InfoLongDescription.en]
 
- Radio meteor trail detection set. It is upgraded by GPS time and frequency synchronization to determining itner-station reflection variation and doppler shift. Station computer is standard PC computer. 
+ Radio meteor trail detection set. It is upgraded by GPS time and frequency synchronization to determining itner-station reflection variation and doppler shift. Station computer is single board ARM computer. 
 
 [InfoLongDescription.cs]
 
-Set pro radiovou detekci meteorů. Je rozšířen o časovou synchronizaci a kmitočtovou stabilizaci LO k určení variací a doplerovského posunu odrazu přijatého několika stanicemi. Staniční počítač je standardní PC. 
+Set pro radiovou detekci meteorů. Je rozšířen o časovou synchronizaci a kmitočtovou stabilizaci LO k určení variací a doplerovského posunu odrazu přijatého několika stanicemi. Staniční počítač je jednodeskový ARM. 
 
 
 [End]
