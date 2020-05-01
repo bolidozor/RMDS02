@@ -1,4 +1,4 @@
-# Radio Meteor Detector Station RMDS01E
+# Radio Meteor Detector Station RMDS02E
 
 The device is the basic SDR receiver set for radio detection of meteor trails. Compared to other methods, its main advantage is in fact, that it uses software-defined receiver, that enables various advanced signal processing techniques.
 
