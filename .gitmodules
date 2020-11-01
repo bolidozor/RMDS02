@@ -1,0 +1,3 @@
+[submodule "DOC/SDRX01B"]
+	path = DOC/SDRX01B
+	url = https://github.com/mlab-modules/SDRX01.git
