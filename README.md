@@ -4,6 +4,7 @@ The device is the basic SDR receiver set for radio detection of meteor trails. C
 
 ![RMDS02E Station](https://raw.githubusercontent.com/bolidozor/RMDS/master/DOC/SRC/img/RMDS02E_Big.jpg "RMDS02E station")
 
+The instrument can be purchased from [Universal Scientific Technologies s.r.o](http://www.ust.cz). Contact us by email sale@ust.cz for a commercial quotation.
 
 ## Meteor detection using GRAVES radar
 
