@@ -1,6 +1,6 @@
 ---
-title: "Radio Meteor Detection Station RMDS02"
-excerpt: "The device presents the basic SDR receiver set for radio detection of meteor trails. Compared to other methods, its main advantage is in the fact, that it uses software-defined receiver that enables various advanced signal processing techniques."
+title: "Radio Meteor Detection Station"
+excerpt: "The RMDS02 is the basic SDR receiver set for radio detection of meteor trails."
 header:
   image: products/RMDS/DOC/SRC/img/RMDS02E_Big.jpg
   teaser: products/RMDS/DOC/SRC/img/RMDS02E_Big.jpg
