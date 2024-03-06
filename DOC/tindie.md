@@ -1,12 +1,10 @@
-### Radio Meteor Detection Station (RMDS)
-
 Embark on an unparalleled journey into the cosmos with the latest Radio Meteor Detection Station (RMDS). Designed for the technically savvy amateur astronomer, RMDS combines cutting-edge software-defined radio (SDR) technology with precision engineering to offer an unmatched meteor observation experience.
 
 **🔭 Key Features:**
 
 - **High-Precision SDR Technology:** Utilize state-of-the-art SDR for real-time meteor trail detection, capturing every celestial event with exceptional clarity.
 - **Integration with GRAVES Radar:** Leverage the powerful and stable signal of the military-grade GRAVES radar, ensuring comprehensive coverage across Europe for reliable meteor detection.
-- **Community Collaboration:** Join a network of stations through initiatives like Bolidozor, fostering a collaborative environment for data sharing and analysis.
+- **Community Collaboration:** Join a network of stations through initiatives like [Bolidozor](https://www.bolidozor.cz/), fostering a collaborative environment for data sharing and analysis.
 - **Advanced Data Analysis:** With shared platforms, contribute to and benefit from a collective pool of meteor detection data, enhancing scientific inquiry and understanding.
 
 **🌠 Technical Specifications:**
