@@ -26,6 +26,12 @@ MLAB_grid_yoffset = (y_size - (y_holes * MLAB_grid))/2;
 
 union () {
 
+    difference(){
+        cube([x_size, y_size, height]);
+        translate([1, 0, 0]) cube([x_size-2, y_size+0.1, height+0.1]);
+        translate([-0.1, y_size, 0]) rotate([25, 0, 0]) cube([x_size+0.2, y_size+10, height+10]);
+    }
+
     difference () {
                 cube([x_size, y_size , thickness ]);
 
